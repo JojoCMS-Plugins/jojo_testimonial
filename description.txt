@@ -1,0 +1,1 @@
+A database of customer testimonials. Display short snippets in the sidebar etc.

@@ -18,7 +18,6 @@
  */
 
 
-
 $table = 'testimonial';
 $o = 1;
 
@@ -41,6 +40,7 @@ $default_fd[$table][$field]['fd_order']    = $o++;
 $default_fd[$table][$field]['fd_name']     = 'ID';
 $default_fd[$table][$field]['fd_type']     = 'readonly';
 $default_fd[$table][$field]['fd_help']     = 'A unique ID, automatically assigned by the system';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'advanced';
 
 /* Title */
@@ -50,6 +50,7 @@ $default_fd[$table][$field]['fd_type']     = 'text';
 $default_fd[$table][$field]['fd_required'] = 'yes';
 $default_fd[$table][$field]['fd_size']     = '40';
 $default_fd[$table][$field]['fd_help']     = 'Name of the company giving the testimonial';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'basic';
 
 /* Contact */
@@ -59,14 +60,16 @@ $default_fd[$table][$field]['fd_type']     = 'text';
 $default_fd[$table][$field]['fd_required'] = 'no';
 $default_fd[$table][$field]['fd_size']     = '40';
 $default_fd[$table][$field]['fd_help']     = 'Name of the person giving the testimonial';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'basic';
 
 /* Description */
 $field = 'tm_url';
 $default_fd[$table][$field]['fd_order']    = $o++;
-$default_fd[$table][$field]['fd_type']     = 'url';
+$default_fd[$table][$field]['fd_type']     = 'internalurl';
 $default_fd[$table][$field]['fd_size']     = '40';
 $default_fd[$table][$field]['fd_help']     = 'Web address of company giving testimonial (if available)';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'advanced';
 
 /* BB Body */
@@ -77,6 +80,7 @@ $default_fd[$table][$field]['fd_options']  = 'tm_body';
 $default_fd[$table][$field]['fd_rows']     = '10';
 $default_fd[$table][$field]['fd_cols']     = '50';
 $default_fd[$table][$field]['fd_help']     = '';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'basic';
 
 /* Body */
@@ -87,6 +91,7 @@ $default_fd[$table][$field]['fd_options']  = '';
 $default_fd[$table][$field]['fd_rows']     = '10';
 $default_fd[$table][$field]['fd_cols']     = '50';
 $default_fd[$table][$field]['fd_help']     = 'The body of the testimonial.';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'advanced';
 
 /* Order */
@@ -95,6 +100,7 @@ $default_fd[$table][$field]['fd_order']    = $o++;
 $default_fd[$table][$field]['fd_type']     = 'order';
 $default_fd[$table][$field]['fd_required'] = 'no';
 $default_fd[$table][$field]['fd_help']     = 'Order in which the testimonial appears in the listing';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'standard';
 
 /* Description */
@@ -106,6 +112,7 @@ $default_fd[$table][$field]['fd_required'] = 'no';
 $default_fd[$table][$field]['fd_rows']     = '4';
 $default_fd[$table][$field]['fd_cols']     = '40';
 $default_fd[$table][$field]['fd_help']     = 'A brief excerpt from the testimonial used for snippets';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'advanced';
 
 /* Location */
@@ -114,6 +121,7 @@ $default_fd[$table][$field]['fd_order']    = $o++;
 $default_fd[$table][$field]['fd_type']     = 'text';
 $default_fd[$table][$field]['fd_size']     = '40';
 $default_fd[$table][$field]['fd_help']     = 'Optional - the location of the person or company';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'standard';
 
 /* Logo */
@@ -121,4 +129,32 @@ $field = 'tm_logo';
 $default_fd[$table][$field]['fd_order']    = $o++;
 $default_fd[$table][$field]['fd_type']     = 'fileupload';
 $default_fd[$table][$field]['fd_help']     = 'Logo of the company giving the testimonial, if available';
+$default_fd[$table][$field]['fd_tabname']  = 'Content';
 $default_fd[$table][$field]['fd_mode']     = 'standard';
+
+// Language Field
+$default_fd[$table]['tm_language'] = array(
+        'fd_name' => "Language/Country",
+        'fd_type' => "dblist",
+        'fd_options' => "lang_country",
+        'fd_default' => "en",
+        'fd_size' => "20",
+        'fd_help' => "The language or country of the testimonial",
+        'fd_order' => $o++,
+        'fd_tabname' => "Content",
+        'fd_mode' => "advanced",
+    );
+
+// HTMLLang Field (to allow user to override the default language for the language/country chosen.
+$default_fd[$table]['tm_htmllang'] = array(
+        'fd_name' => "HTML Language",
+        'fd_type' => "dblist",
+        'fd_options' => "language",
+        'fd_default' => "",
+        'fd_size' => "20",
+        'fd_help' => "The language of the testimonial - if different from the default language for the language/country chosen above.",
+        'fd_order' => $o++,
+        'fd_tabname' => "Content",
+        'fd_mode' => "advanced",
+    );
+

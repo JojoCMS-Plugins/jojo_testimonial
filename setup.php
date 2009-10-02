@@ -19,35 +19,6 @@
 
 
 
-if (!Jojo::tableexists('testimonial')) {
-    echo "Table <b>testimonial</b> Does not exist - creating empty table<br />";
-    $query = "
-        CREATE TABLE {testimonial} (
-        `testimonialid` int(11) NOT NULL auto_increment,
-        `tm_name` varchar(255) NOT NULL default '',
-        `tm_contact` varchar(255) NOT NULL default '',
-        `tm_logo` varchar(255) NOT NULL default '',
-        `tm_body` text NOT NULL,
-        `tm_url` varchar(255) NOT NULL default '',
-        `tm_order` int(11) NOT NULL default '0',
-        `tm_desc` varchar(255) NOT NULL default '',
-        PRIMARY KEY  (`testimonialid`)
-        ) ENGINE=MyISAM  ;
-    ";
-    Jojo::updateQuery($query);
-}
-
-/* add bbcode field */
-if (!Jojo::fieldexists('testimonial','tm_bbbody')) { //BBCode Body text - should be optional
-    echo "Add <b>tm_bbbody</b> to <b>testimonial</b><br />";
-    Jojo::structureQuery("ALTER TABLE {testimonial} ADD `tm_bbbody` TEXT NOT NULL  AFTER `tm_body` ;");
-}
-
-/* add location field */
-if (!Jojo::fieldexists('testimonial','tm_location')) { //BBCode Body text - should be optional
-    echo "Add <b>tm_location</b> to <b>testimonial</b><br />";
-    Jojo::structureQuery("ALTER TABLE {testimonial} ADD `tm_location` TEXT NOT NULL  AFTER `tm_desc` ;");
-}
 
 /* testimonials page for menu */
 Jojo::updateQuery("UPDATE {page} SET pg_link='JOJO_Plugin_Jojo_testimonial' WHERE pg_link='jojo_testimonial.php'");

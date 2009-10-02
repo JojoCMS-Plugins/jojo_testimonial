@@ -21,33 +21,59 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
 {
     function _getContent()
     {
-        global $smarty;
+        global $smarty, $page;
 
         $content = array();
         $id = Util::getFormData('id', false);
-        if ($id) {
-            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ?", $id);
+        $url = Util::getFormData('url', false);
+        if ($id || $url) {
+            if ($id) {
+                $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ?", $id);
+            } else  {
+                $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE tm_url = ?", $url);
+                $id = $testimonial['testimonialid'];
+            }
+            $testimonial['name'] = htmlspecialchars($testimonial['tm_name'], ENT_COMPAT, 'UTF-8', false);
+            $testimonial['contact'] = htmlspecialchars($testimonial['tm_contact'], ENT_COMPAT, 'UTF-8', false);
             $smarty->assign('testimonial', $testimonial);
 
             /* add testimonial breadcrumb */
             $breadcrumbs                      = $this->_getBreadCrumbs();
             $breadcrumb                       = array();
-            $breadcrumb['name']               = $testimonial['tm_name'];
-            $breadcrumb['rollover']           = $testimonial['tm_name'];
-            $breadcrumb['url']                = Jojo::rewrite('testimonial', $testimonial['testimonialid'], $testimonial['tm_name']);
+            $breadcrumb['name']               = $testimonial['name'];
+            $breadcrumb['rollover']           = $testimonial['name'];
+            $breadcrumb['url']                = !empty($testimonial['tm_url']) ? _SITEURL . '/testimonials/' . $testimonial['tm_url'] . '/'  : _SITEURL . '/' .  Jojo::rewrite('testimonials', $id, $testimonial['tm_name'], '');
             $breadcrumbs[count($breadcrumbs)] = $breadcrumb;
 
-            $content['title']       = $testimonials[0]['tm_name'];
-            $content['seotitle']    = $testimonials[0]['tm_name'].' | Client Testimonials';
+            $content['title']       = $testimonial['name'];
+            $content['seotitle']    = $testimonial['name'] . ' | Client Testimonials';
             $content['breadcrumbs'] = $breadcrumbs;
 
         } else {
+            $language='';
+            $languagePrefix='';
+            if (_MULTILANGUAGE) {
+              $language = !empty($page->page['pg_language']) ? $page->page['pg_language'] : Jojo::getOption('multilanguage-default', 'en');
+              $languagePrefix = Jojo::getMultiLanguageString ( $language );
+            }
             $orderby = 'tm_order, tm_name';
             $orderby = Jojo::applyFilter('jojo_testimonial:orderby', $orderby);
-            $maintestimonials = Jojo::selectQuery("SELECT * FROM {testimonial} WHERE 1 ORDER BY $orderby");
-            $n = count($maintestimonials);
-            for ($i=0; $i<$n; $i++) {
-                $maintestimonials[$i]['url'] =  Jojo::rewrite('testimonials', $maintestimonials[$i]['testimonialid'], $maintestimonials[$i]['tm_name'], '');
+            $query  = "SELECT * FROM {testimonial} WHERE 1 ";
+            //if it is the default language, show all
+            $query .= (_MULTILANGUAGE and $languagePrefix) ? " AND tm_language = '$language'" : '';
+            $query.=" ORDER BY $orderby";
+            $maintestimonials = Jojo::selectQuery($query);
+
+            foreach ($maintestimonials as &$mt) {
+                if(_MULTILANGUAGE){
+                  $mt['tm_language']=($mt['tm_language']) ? $mt['tm_language'] : Jojo::getOption('multilanguage-default', 'en');
+                  if (!$languagePrefix and ($mt['tm_language']==Jojo::getOption('multilanguage-default', 'en'))) $languagePre='';
+                  else $languagePre= ($languagePrefix) ? $languagePrefix : $mt['tm_language']."/";
+                } else $languagePre='';
+
+                $mt['url'] =  !empty($mt['tm_url']) ? $languagePre . 'testimonials/' . $mt['tm_url'] . '/'  :  $languagePre . Jojo::rewrite('testimonials', $mt['testimonialid'], $mt['tm_name'], '');
+                $mt['name'] = htmlspecialchars($mt['tm_name'], ENT_COMPAT, 'UTF-8', false);
+                $mt['contact'] = htmlspecialchars($mt['tm_contact'], ENT_COMPAT, 'UTF-8', false);
             }
             $smarty->assign('testimonial', '');
             $smarty->assign('maintestimonials', $maintestimonials);
@@ -59,10 +85,26 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
 
     function getCorrectUrl()
     {
+        global $page;
         $id = Jojo::getFormData('id', false);
+        $url = Util::getFormData('url', false);
+        if($id or $url) {
+            $language_query='';
+            $languagePrefix='';
+            if (_MULTILANGUAGE) {
+              $language = !empty($page->page['pg_language']) ? $page->page['pg_language'] : Jojo::getOption('multilanguage-default', 'en');
+              $languagePrefix = Jojo::getMultiLanguageString ( $language );
+              $language_query='and tm_language = \''.$language.'\'';
+            }
+        }
         if ($id) {
-            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ?", $id);
-            return _SITEURL . '/' .  Jojo::rewrite('testimonials', $id, $testimonial['tm_name'], '');
+            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ? $language_query", $id);
+            $correcturl = !empty($testimonial['tm_url']) ? _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/'  : _SITEURL . '/' . $languagePrefix . Jojo::rewrite('testimonials', $id, $testimonial['tm_name'], '');
+            return $correcturl;
+        } elseif ($url) {
+            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE tm_url = ? $language_query", $url);
+            $correcturl =  _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/';
+            return $correcturl;
         }
         return parent::getCorrectUrl();
     }

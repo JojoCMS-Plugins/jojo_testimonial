@@ -23,3 +23,4 @@ $_provides['pluginClasses'] = array(
 
 /* Register URI patterns */
 Jojo::registerURI("testimonials/[id:string]/[phrase]",       'Jojo_Plugin_Jojo_testimonial'); // "testimonials/123/joe-bloggs/"
+Jojo::registerURI("testimonials/[url:string]/",       'Jojo_Plugin_Jojo_testimonial'); // "testimonials/joe-bloggs/"

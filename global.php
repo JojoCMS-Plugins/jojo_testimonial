@@ -23,6 +23,6 @@
 $testimonials = Jojo::selectQuery("SELECT * FROM {testimonial}");
 shuffle($testimonials);
 $testimonial = array_pop($testimonials);
-$testimonial['url'] =  !empty($testimonial['tm_url']) ? $testimonial['tm_url']."/" : Jojo::rewrite('testimonials', $testimonial['testimonialid'], $testimonial['tm_name'], '');
+$testimonial['url'] =  !empty($testimonial['tm_url']) ? "testimonials/".$testimonial['tm_url']."/" : Jojo::rewrite('testimonials', $testimonial['testimonialid'], $testimonial['tm_name'], '');
 $smarty->assign('testimonial', $testimonial);
 $smarty->assign('random_testimonial', $smarty->fetch('jojo_testimonial_sidebar.tpl'));

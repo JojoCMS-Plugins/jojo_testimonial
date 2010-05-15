@@ -20,10 +20,9 @@
 
 
 /* grabs a random testimonial from the database, for use in a sitewide snippet */
-$testimonials = Jojo::selectquery("SELECT * FROM {testimonial} WHERE 1 ORDER BY RAND() LIMIT 1");
-if(!empty($testimonials[0]['url']))
-{
-  $testimonials[0]['url'] =  Jojo::rewrite('testimonials', $testimonials[0]['testimonialid'], $testimonials[0]['tm_name'], '');
-  $smarty->assign('testimonial', $testimonials[0]);
-  $smarty->assign('random_testimonial', $smarty->fetch('jojo_testimonial_sidebar.tpl'));
-}
+$testimonials = Jojo::selectQuery("SELECT * FROM {testimonial}");
+shuffle($testimonials);
+$testimonial = array_pop($testimonials);
+$testimonial['url'] =  !empty($testimonial['tm_url']) ? $testimonial['tm_url']."/" : Jojo::rewrite('testimonials', $testimonial['testimonialid'], $testimonial['tm_name'], '');
+$smarty->assign('testimonial', $testimonial);
+$smarty->assign('random_testimonial', $smarty->fetch('jojo_testimonial_sidebar.tpl'));

@@ -48,6 +48,7 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
             $content['title']       = $testimonial['name'];
             $content['seotitle']    = $testimonial['name'] . ' | Client Testimonials';
             $content['breadcrumbs'] = $breadcrumbs;
+            $content['metadescription'] = substr('The testimonial of '.$testimonial['name'].' for '.Jojo::getOption('sitetitle').'. '.strip_tags($testimonial['tm_body']),0,165); //keeping it longer than 155 so Google cuts it off using words
 
         } else {
             $language='';

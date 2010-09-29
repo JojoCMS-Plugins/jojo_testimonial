@@ -97,15 +97,15 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
               $languagePrefix = Jojo::getMultiLanguageString ( $language );
               $language_query='and tm_language = \''.$language.'\'';
             }
-        }
-        if ($id) {
-            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ? $language_query", $id);
-            $correcturl = !empty($testimonial['tm_url']) ? _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/'  : _SITEURL . '/' . $languagePrefix . Jojo::rewrite('testimonials', $id, $testimonial['tm_name'], '');
-            return $correcturl;
-        } elseif ($url) {
-            $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE tm_url = ? $language_query", $url);
-            $correcturl =  _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/';
-            return $correcturl;
+            if ($id) {
+                $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ? $language_query", $id);
+                $correcturl = !empty($testimonial['tm_url']) ? _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/'  : _SITEURL . '/' . $languagePrefix . Jojo::rewrite('testimonials', $id, $testimonial['tm_name'], '');
+                return $correcturl;
+            } elseif ($url) {
+                $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE tm_url = ? $language_query", $url);
+                $correcturl =  _SITEURL . $languagePrefix . '/testimonials/' . $testimonial['tm_url'] . '/';
+                return $correcturl;
+            }
         }
         return parent::getCorrectUrl();
     }

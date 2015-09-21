@@ -24,8 +24,8 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
         global $smarty, $page;
 
         $content = array();
-        $id = Util::getFormData('id', false);
-        $url = Util::getFormData('url', false);
+        $id = Jojo::getFormData('id', false);
+        $url = Jojo::getFormData('url', false);
         if ($id || $url) {
             if ($id) {
                 $testimonial = Jojo::selectRow("SELECT * FROM {testimonial} WHERE testimonialid = ?", $id);
@@ -88,7 +88,7 @@ class JOJO_Plugin_Jojo_testimonial extends JOJO_Plugin
     {
         global $page;
         $id = Jojo::getFormData('id', false);
-        $url = Util::getFormData('url', false);
+        $url = Jojo::getFormData('url', false);
         if($id or $url) {
             $language_query='';
             $languagePrefix='';
